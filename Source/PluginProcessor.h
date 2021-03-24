@@ -57,9 +57,9 @@ private:
     AudioProcessorValueTreeState parameters;
     std::atomic<float>* biasParameter = nullptr;
     std::atomic<float>* gainParameter = nullptr;
-    //double eta = 1.836f;
+    double eta = 1.836f;
     double VT = 0.0260f;
-    double gamma = 0.048f;
+    double gamma = eta * VT;
     double C = 1.0e-7f;
     double Mp = 1.0e-4f;
     

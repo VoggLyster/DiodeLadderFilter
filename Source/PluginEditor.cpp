@@ -13,10 +13,10 @@
 VCS3FilterAudioProcessorEditor::VCS3FilterAudioProcessorEditor (VCS3FilterAudioProcessor& p, AudioProcessorValueTreeState& vts)
     : AudioProcessorEditor (&p), audioProcessor (p), valueTreeState (vts)
 {
-    biasLabel.setText("Bias", juce::dontSendNotification);
+    biasLabel.setText("Frequency", juce::dontSendNotification);
     addAndMakeVisible(biasLabel);
     addAndMakeVisible(biasSlider);
-    biasAttachment.reset(new SliderAttachment(valueTreeState, "bias", biasSlider));
+    biasAttachment.reset(new SliderAttachment(valueTreeState, "freq", biasSlider));
 
     gainLabel.setText("Gain", juce::dontSendNotification);
     addAndMakeVisible(gainLabel);

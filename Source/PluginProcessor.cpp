@@ -23,11 +23,12 @@ VCS3FilterAudioProcessor::VCS3FilterAudioProcessor()
 #endif
     : parameters (*this, nullptr, Identifier("VCS3Filter"),
         {
-            std::make_unique<AudioParameterFloat>("bias", "Bias", NormalisableRange<float>(10.0f, 5000.0f, 1.0f, 0.3f), 100.0f),
-            std::make_unique<AudioParameterFloat>("gain", "Gain", 0.1f, 10.0f, 1.0f),
+            std::make_unique<AudioParameterFloat>("freq", "Frequency", NormalisableRange<float>(30.0f, 20000.0f, 0.f, 0.25f), 10000.0f),
+            std::make_unique<AudioParameterFloat>("gain", "Gain", 0.0f, 10.0f, 1.0f) /*Gain from 0-10 -> Modeling of the EMS VCS3 Voltage-Controlled
+            Filter as a Nonlinear Filter Network sec. II A*/,
         })
 {
-    biasParameter = parameters.getRawParameterValue("bias");
+    biasParameter = parameters.getRawParameterValue("freq");
     gainParameter = parameters.getRawParameterValue("gain");
 }
 
@@ -177,9 +178,8 @@ void VCS3FilterAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, j
     auto* leftChannel = oversampledBlock.getChannelPointer(0);
     auto* rightChannel = oversampledBlock.getChannelPointer(1);
 
-    auto I0 = *biasParameter / 1000000;
+    auto I0 = 8 * C * VT * 2 * Fs * tan((MathConstants<float>::pi * *biasParameter) / Fs);
     float K = *gainParameter;
-
 
     for (auto n = 0; n < oversampledBlock.getNumSamples(); n++)
     {
